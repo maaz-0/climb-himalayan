@@ -1,0 +1,110 @@
+---
+const categories = [
+  {
+    title: 'Trekking',
+    description:
+      'Classic Himalayan trails through ancient villages, lush forests, and stunning mountain panoramas. Perfect for adventurers of all skill levels.',
+    icon: 'M15.75 19.5L8.25 12l7.5-7.5',
+    href: '/packages?category=trekking',
+    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80',
+  },
+  {
+    title: 'Expeditions',
+    description:
+      'Summit your first Himalayan peak with expert guidance. Our peak climbing expeditions offer the thrill of high-altitude mountaineering.',
+    icon: 'M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941',
+    href: '/packages?category=expedition',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',
+  },
+  {
+    title: 'Technical Climbing',
+    description:
+      'For experienced mountaineers seeking the ultimate challenge. World-class climbing on iconic peaks like Ama Dablam and beyond.',
+    icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z',
+    href: '/packages?category=climbing',
+    image: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=600&q=80',
+  },
+];
+---
+
+<section id="categories" class="bg-gray-50 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="mx-auto max-w-2xl text-center">
+      <span
+        class="text-sm font-semibold uppercase tracking-widest text-accent"
+      >
+        Choose Your Adventure
+      </span>
+      <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Explore Our Adventures
+      </h2>
+      <p class="mt-4 text-lg text-gray-600">
+        From gentle treks to technical climbs, we offer experiences for every
+        level of adventurer.
+      </p>
+    </div>
+
+    <!-- Category Cards -->
+    <div class="mt-16 grid gap-8 md:grid-cols-3">
+      {
+        categories.map((category) => (
+          <a
+            href={category.href}
+            class="group relative overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover"
+          >
+            {/* Image */}
+            <div class="relative h-48 overflow-hidden">
+              <div
+                class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                style={`background-image: url('${category.image}')`}
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            </div>
+
+            {/* Content */}
+            <div class="p-6">
+              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
+                <svg
+                  class="h-6 w-6 text-accent"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d={category.icon}
+                  />
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-bold text-gray-900 group-hover:text-accent transition-colors">
+                {category.title}
+              </h3>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                {category.description}
+              </p>
+              <div class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent">
+                Explore
+                <svg
+                  class="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

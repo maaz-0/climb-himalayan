@@ -1,0 +1,203 @@
+---
+import Button from '../common/Button.astro';
+
+const slides = [
+  {
+    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1920&q=80',
+    title: 'Everest Base Camp',
+    subtitle: 'Trek to the Roof of the World',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=1920&q=80',
+    title: 'Annapurna Circuit',
+    subtitle: 'The Classic Himalayan Adventure',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
+    title: 'Peak Expeditions',
+    subtitle: 'Conquer Your First Summit',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1920&q=80',
+    title: 'Technical Climbing',
+    subtitle: 'For the Ultimate Challenge',
+  },
+];
+---
+
+<section class="relative h-screen w-full overflow-hidden">
+  <!-- Slides -->
+  <div id="hero-slider" class="relative h-full w-full">
+    {
+      slides.map((slide, index) => (
+        <div
+          class:list={[
+            'hero-slide absolute inset-0 transition-opacity duration-1000',
+            index === 0 ? 'opacity-100' : 'opacity-0',
+          ]}
+          data-index={index}
+        >
+          <div
+            class="absolute inset-0 bg-cover bg-center"
+            style={`background-image: url('${slide.image}')`}
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Content -->
+  <div
+    class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white"
+  >
+    <div class="max-w-4xl">
+      <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">
+        Your Gateway to the Roof of the World
+      </p>
+      <h1
+        id="hero-title"
+        class="mb-2 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+      >
+        {slides[0].title}
+      </h1>
+      <p
+        id="hero-subtitle"
+        class="mb-8 text-xl text-gray-200 sm:text-2xl md:text-3xl"
+      >
+        {slides[0].subtitle}
+      </p>
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <Button href="/packages" variant="primary" size="lg">
+          Explore Packages
+        </Button>
+        <Button href="/contact" variant="outline" size="lg" class="border-white text-white hover:bg-white hover:text-primary">
+          Contact Us
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination Dots -->
+  <div class="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+    {
+      slides.map((_, index) => (
+        <button
+          type="button"
+          class:list={[
+            'hero-dot h-3 w-3 rounded-full transition-all duration-300',
+            index === 0 ? 'bg-accent w-8' : 'bg-white/50 hover:bg-white/75',
+          ]}
+          data-index={index}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))
+    }
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-8 right-8 hidden animate-bounce md:block">
+    <a href="#categories" class="text-white/75 hover:text-white">
+      <svg
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"></path>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<script define:vars={{ slides }}>
+  const heroSlider = document.getElementById('hero-slider');
+  const heroTitle = document.getElementById('hero-title');
+  const heroSubtitle = document.getElementById('hero-subtitle');
+  const slideElements = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+
+  let currentSlide = 0;
+  let autoplayInterval;
+
+  function goToSlide(index) {
+    // Update slides
+    slideElements.forEach((slide, i) => {
+      if (i === index) {
+        slide.classList.remove('opacity-0');
+        slide.classList.add('opacity-100');
+      } else {
+        slide.classList.add('opacity-0');
+        slide.classList.remove('opacity-100');
+      }
+    });
+
+    // Update text
+    if (heroTitle) heroTitle.textContent = slides[index].title;
+    if (heroSubtitle) heroSubtitle.textContent = slides[index].subtitle;
+
+    // Update dots
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.add('bg-accent', 'w-8');
+        dot.classList.remove('bg-white/50');
+      } else {
+        dot.classList.remove('bg-accent', 'w-8');
+        dot.classList.add('bg-white/50');
+      }
+    });
+
+    currentSlide = index;
+  }
+
+  function nextSlide() {
+    const next = (currentSlide + 1) % slides.length;
+    goToSlide(next);
+  }
+
+  function startAutoplay() {
+    autoplayInterval = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayInterval);
+  }
+
+  // Click handlers for dots
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      stopAutoplay();
+      goToSlide(index);
+      startAutoplay();
+    });
+  });
+
+  // Pause on hover
+  heroSlider?.addEventListener('mouseenter', stopAutoplay);
+  heroSlider?.addEventListener('mouseleave', startAutoplay);
+
+  // Start autoplay
+  startAutoplay();
+</script>
+
+<style>
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+</style>

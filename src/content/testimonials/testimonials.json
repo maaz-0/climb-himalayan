@@ -1,0 +1,40 @@
+{
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Sarah Mitchell",
+      "location": "Denver, Colorado",
+      "trip": "Everest Base Camp Trek",
+      "quote": "An absolutely life-changing experience! The guides were incredibly knowledgeable and made sure we were safe every step of the way. Standing at Everest Base Camp was a dream come true.",
+      "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+      "rating": 5
+    },
+    {
+      "id": 2,
+      "name": "Michael Chen",
+      "location": "Toronto, Canada",
+      "trip": "Annapurna Circuit Trek",
+      "quote": "The Annapurna Circuit exceeded all my expectations. The diversity of landscapes and cultures was incredible. Climb Himalayan took care of every detail, allowing me to fully immerse in the experience.",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+      "rating": 5
+    },
+    {
+      "id": 3,
+      "name": "Emily Rodriguez",
+      "location": "San Francisco, California",
+      "trip": "Island Peak Expedition",
+      "quote": "Summiting Island Peak was the most challenging and rewarding thing I've ever done. The climbing guides were world-class and made me feel confident even in difficult sections.",
+      "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80",
+      "rating": 5
+    },
+    {
+      "id": 4,
+      "name": "David Thompson",
+      "location": "Vancouver, Canada",
+      "trip": "Everest Base Camp Trek",
+      "quote": "From the moment I landed in Kathmandu to my last day, everything was perfectly organized. The Sherpa hospitality was heartwarming, and the mountain views were beyond description.",
+      "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80",
+      "rating": 5
+    }
+  ]
+}

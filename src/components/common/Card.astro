@@ -1,0 +1,120 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  category: 'trekking' | 'expedition' | 'climbing';
+  heroImage: string;
+  duration: string;
+  difficulty: string;
+  shortDescription: string;
+  price: string;
+}
+
+const {
+  title,
+  slug,
+  category,
+  heroImage,
+  duration,
+  difficulty,
+  shortDescription,
+  price,
+} = Astro.props;
+
+const categoryLabels = {
+  trekking: 'Trekking',
+  expedition: 'Expedition',
+  climbing: 'Technical Climbing',
+};
+
+const categoryColors = {
+  trekking: 'bg-green-600',
+  expedition: 'bg-blue-600',
+  climbing: 'bg-accent',
+};
+---
+
+<article class="group relative overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover">
+  <!-- Image Container -->
+  <div class="relative h-64 overflow-hidden">
+    <div
+      class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+      style={`background-image: url('${heroImage}')`}
+    >
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+    </div>
+
+    <!-- Category Badge -->
+    <span
+      class:list={[
+        'absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white',
+        categoryColors[category],
+      ]}
+    >
+      {categoryLabels[category]}
+    </span>
+
+    <!-- Duration & Difficulty Badges -->
+    <div class="absolute bottom-4 left-4 flex gap-2">
+      <span
+        class="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-800"
+      >
+        {duration}
+      </span>
+      <span
+        class="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-800"
+      >
+        {difficulty}
+      </span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <h3 class="mb-2 text-xl font-bold text-gray-900 group-hover:text-accent transition-colors">
+      {title}
+    </h3>
+    <p class="mb-4 line-clamp-2 text-sm text-gray-600">
+      {shortDescription}
+    </p>
+
+    <div class="flex items-center justify-between">
+      <span class="text-lg font-bold text-primary">
+        {price}
+      </span>
+      <a
+        href={`/packages/${slug}`}
+        class="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:gap-2 transition-all"
+      >
+        Learn More
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Full Card Link Overlay -->
+  <a href={`/packages/${slug}`} class="absolute inset-0" aria-label={`View ${title}`}>
+    <span class="sr-only">View {title}</span>
+  </a>
+</article>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

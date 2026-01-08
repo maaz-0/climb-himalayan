@@ -1,0 +1,187 @@
+---
+interface Props {
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Packages', href: '/packages' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<header
+  id="header"
+  class:list={[
+    'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+    transparent ? 'bg-transparent' : 'bg-white shadow-md',
+  ]}
+  data-transparent={transparent}
+>
+  <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-20 items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2">
+        <span
+          class:list={[
+            'text-2xl font-bold tracking-tight transition-colors',
+            transparent ? 'text-white' : 'text-primary',
+          ]}
+          id="logo-text"
+        >
+          Climb<span class="text-accent">Himalayan</span>
+        </span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex md:items-center md:gap-8">
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'text-sm font-medium transition-colors hover:text-accent nav-link',
+                transparent ? 'text-white' : 'text-gray-700',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+        <a
+          href="/contact"
+          class="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-dark hover:shadow-lg"
+        >
+          Enquire Now
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        type="button"
+        id="mobile-menu-button"
+        class="inline-flex items-center justify-center rounded-md p-2 md:hidden"
+        aria-expanded="false"
+        aria-label="Toggle menu"
+      >
+        <svg
+          id="menu-icon"
+          class:list={['h-6 w-6', transparent ? 'text-white' : 'text-gray-700']}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+        </svg>
+        <svg
+          id="close-icon"
+          class="hidden h-6 w-6 text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    class="hidden fixed inset-0 top-20 z-40 bg-white md:hidden"
+  >
+    <div class="flex flex-col gap-4 px-6 py-8">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-lg font-medium text-gray-700 hover:text-accent"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href="/contact"
+        class="mt-4 inline-block rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-white hover:bg-accent-dark"
+      >
+        Enquire Now
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('header');
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+  const logoText = document.getElementById('logo-text');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const isTransparent = header?.dataset.transparent === 'true';
+
+  // Mobile menu toggle
+  mobileMenuButton?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.classList.toggle('hidden') === false;
+    menuIcon?.classList.toggle('hidden', isOpen);
+    closeIcon?.classList.toggle('hidden', !isOpen);
+
+    if (isOpen && isTransparent) {
+      header?.classList.remove('bg-transparent');
+      header?.classList.add('bg-white', 'shadow-md');
+      updateTextColors(false);
+    } else if (!isOpen && isTransparent && window.scrollY < 100) {
+      header?.classList.add('bg-transparent');
+      header?.classList.remove('bg-white', 'shadow-md');
+      updateTextColors(true);
+    }
+  });
+
+  // Scroll behavior for transparent header
+  if (isTransparent) {
+    const updateTextColors = (isWhite: boolean) => {
+      if (isWhite) {
+        logoText?.classList.remove('text-primary');
+        logoText?.classList.add('text-white');
+        menuIcon?.classList.remove('text-gray-700');
+        menuIcon?.classList.add('text-white');
+        navLinks.forEach((link) => {
+          link.classList.remove('text-gray-700');
+          link.classList.add('text-white');
+        });
+      } else {
+        logoText?.classList.add('text-primary');
+        logoText?.classList.remove('text-white');
+        menuIcon?.classList.add('text-gray-700');
+        menuIcon?.classList.remove('text-white');
+        navLinks.forEach((link) => {
+          link.classList.add('text-gray-700');
+          link.classList.remove('text-white');
+        });
+      }
+    };
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header?.classList.remove('bg-transparent');
+        header?.classList.add('bg-white', 'shadow-md');
+        updateTextColors(false);
+      } else if (mobileMenu?.classList.contains('hidden')) {
+        header?.classList.add('bg-transparent');
+        header?.classList.remove('bg-white', 'shadow-md');
+        updateTextColors(true);
+      }
+    });
+  }
+</script>
