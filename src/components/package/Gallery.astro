@@ -1,0 +1,48 @@
+---
+interface Props {
+  images: string[];
+  title: string;
+}
+
+const { images, title } = Astro.props;
+---
+
+{images && images.length > 0 && (
+  <section class="bg-gray-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-accent">
+          Visual Journey
+        </span>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Photo Gallery
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          Get a glimpse of what awaits you on the {title}
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {images.map((image, index) => (
+          <div
+            class:list={[
+              'group relative overflow-hidden rounded-2xl',
+              index === 0 ? 'sm:col-span-2 sm:row-span-2' : '',
+            ]}
+          >
+            <div
+              class:list={[
+                'aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-110',
+                index === 0 ? 'sm:aspect-auto sm:h-full' : '',
+              ]}
+              style={`background-image: url('${image}')`}
+            >
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

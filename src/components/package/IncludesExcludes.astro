@@ -1,0 +1,82 @@
+---
+interface Props {
+  includes: string[];
+  excludes: string[];
+}
+
+const { includes, excludes } = Astro.props;
+---
+
+<section class="bg-gray-50 py-20 lg:py-28">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <span class="text-sm font-semibold uppercase tracking-widest text-accent">
+        What to Expect
+      </span>
+      <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Included & Excluded
+      </h2>
+      <p class="mt-4 text-lg text-gray-600">
+        Everything you need to know about what's covered in your package
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-8 md:grid-cols-2">
+      <!-- Included -->
+      <div class="rounded-2xl bg-white p-8 shadow-card">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">What's Included</h3>
+        </div>
+        <ul class="space-y-3">
+          {includes.map((item) => (
+            <li class="flex items-start gap-3">
+              <svg
+                class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              <span class="text-gray-700">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Excluded -->
+      <div class="rounded-2xl bg-white p-8 shadow-card">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">What's Not Included</h3>
+        </div>
+        <ul class="space-y-3">
+          {excludes.map((item) => (
+            <li class="flex items-start gap-3">
+              <svg
+                class="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              <span class="text-gray-700">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,144 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import PackageHero from '../../components/package/PackageHero.astro';
+import QuickFacts from '../../components/package/QuickFacts.astro';
+import Overview from '../../components/package/Overview.astro';
+import Gallery from '../../components/package/Gallery.astro';
+import Itinerary from '../../components/package/Itinerary.astro';
+import IncludesExcludes from '../../components/package/IncludesExcludes.astro';
+import FAQ from '../../components/package/FAQ.astro';
+import EnquiryCTA from '../../components/package/EnquiryCTA.astro';
+import RelatedPackages from '../../components/package/RelatedPackages.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const packages = await getCollection('packages');
+  return packages.map((pkg) => ({
+    params: { slug: pkg.data.slug || pkg.id.replace(/\.md$/, '') },
+    props: { pkg },
+  }));
+}
+
+const { pkg } = Astro.props;
+const { Content } = await render(pkg);
+
+const {
+  title,
+  slug,
+  category,
+  heroImage,
+  galleryImages,
+  duration,
+  maxAltitude,
+  difficulty,
+  season,
+  price,
+  shortDescription,
+  highlights,
+  includes,
+  excludes,
+  itinerary,
+  faqs,
+} = pkg.data;
+
+const packageSlug = slug || pkg.id.replace(/\.md$/, '');
+---
+
+<Layout
+  title={`${title} | Climb Himalayan`}
+  description={shortDescription}
+  image={heroImage}
+>
+  <Header transparent />
+  
+  <main>
+    <PackageHero
+      title={title}
+      category={category}
+      heroImage={heroImage}
+    />
+
+    <QuickFacts
+      duration={duration}
+      maxAltitude={maxAltitude}
+      difficulty={difficulty}
+      season={season}
+      price={price}
+    />
+
+    <Overview
+      content={`<div class="package-content">${await Astro.slots.render('default').catch(() => '')}</div>`}
+      highlights={highlights}
+    />
+
+    <!-- Render markdown content separately -->
+    <section class="bg-white py-0 -mt-20">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="lg:pl-0 lg:pr-[calc(100%/3+3rem)]">
+          <div class="prose prose-lg max-w-none text-gray-600">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {galleryImages && galleryImages.length > 0 && (
+      <Gallery images={galleryImages} title={title} />
+    )}
+
+    <Itinerary itinerary={itinerary} />
+
+    <IncludesExcludes includes={includes} excludes={excludes} />
+
+    {faqs && faqs.length > 0 && (
+      <FAQ faqs={faqs} />
+    )}
+
+    <EnquiryCTA packageName={title} />
+
+    <RelatedPackages currentSlug={packageSlug} currentCategory={category} />
+  </main>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  .package-content h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .package-content h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .package-content p {
+    margin-bottom: 1rem;
+    line-height: 1.75;
+  }
+  
+  .package-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .package-content ul > li + li {
+    margin-top: 0.5rem;
+  }
+  
+  .package-content li {
+    color: #4b5563;
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Card from '../common/Card.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  currentCategory: 'trekking' | 'expedition' | 'climbing';
+}
+
+const { currentSlug, currentCategory } = Astro.props;
+
+const allPackages = await getCollection('packages');
+
+// Get packages in the same category first, then others
+const sameCategory = allPackages.filter(
+  (pkg) => pkg.data.category === currentCategory && (pkg.data.slug || pkg.id.replace(/\.md$/, '')) !== currentSlug
+);
+const otherPackages = allPackages.filter(
+  (pkg) => pkg.data.category !== currentCategory && (pkg.data.slug || pkg.id.replace(/\.md$/, '')) !== currentSlug
+);
+
+// Combine and take up to 3 related packages
+const relatedPackages = [...sameCategory, ...otherPackages].slice(0, 3);
+---
+
+{relatedPackages.length > 0 && (
+  <section class="bg-gray-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-accent">
+          More Adventures
+        </span>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          You Might Also Like
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          Explore more incredible Himalayan experiences
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {relatedPackages.map((pkg) => (
+          <Card
+            title={pkg.data.title}
+            slug={pkg.data.slug || pkg.id.replace(/\.md$/, '')}
+            category={pkg.data.category}
+            heroImage={pkg.data.heroImage}
+            duration={pkg.data.duration}
+            difficulty={pkg.data.difficulty}
+            shortDescription={pkg.data.shortDescription}
+            price={pkg.data.price}
+          />
+        ))}
+      </div>
+
+      <div class="mt-12 text-center">
+        <a
+          href="/packages"
+          class="inline-flex items-center gap-2 rounded-full border-2 border-accent px-8 py-3 text-base font-semibold text-accent transition-all hover:bg-accent hover:text-white"
+        >
+          View All Packages
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+)}
