@@ -58,3 +58,216 @@ a, button {
     text-wrap: balance;
   }
 }
+
+/* ========================================
+   Animation Utilities - Refined & Polished
+   ======================================== */
+
+/* Hover lift effect - elegant card elevation */
+.hover-lift {
+  transition:
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 40px -12px rgba(0, 0, 0, 0.15),
+    0 8px 16px -8px rgba(0, 0, 0, 0.1);
+}
+
+/* Button press feedback */
+.btn-press {
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Image zoom container */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img,
+.img-zoom > div,
+.img-zoom > .img-zoom-target {
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.img-zoom:hover img,
+.img-zoom:hover > div,
+.img-zoom:hover > .img-zoom-target {
+  transform: scale(1.08);
+}
+
+/* Animated underline for links */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Gradient text animation */
+.text-gradient-animate {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-accent) 50%,
+    var(--color-primary) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Subtle pulse for CTAs */
+.pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 20, 60, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 20, 60, 0.15);
+  }
+}
+
+/* Floating animation for decorative elements */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Focus ring with animation */
+.focus-ring {
+  transition: box-shadow 200ms ease;
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-accent);
+}
+
+/* Smooth card border glow on hover */
+.card-glow {
+  position: relative;
+}
+
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(220, 20, 60, 0.3) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 400ms ease;
+  z-index: -1;
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Stagger animation helper for children */
+.stagger-children > * {
+  --stagger-delay: 80ms;
+}
+
+.stagger-children > *:nth-child(1) { --reveal-delay: calc(var(--stagger-delay) * 0); }
+.stagger-children > *:nth-child(2) { --reveal-delay: calc(var(--stagger-delay) * 1); }
+.stagger-children > *:nth-child(3) { --reveal-delay: calc(var(--stagger-delay) * 2); }
+.stagger-children > *:nth-child(4) { --reveal-delay: calc(var(--stagger-delay) * 3); }
+.stagger-children > *:nth-child(5) { --reveal-delay: calc(var(--stagger-delay) * 4); }
+.stagger-children > *:nth-child(6) { --reveal-delay: calc(var(--stagger-delay) * 5); }
+.stagger-children > *:nth-child(7) { --reveal-delay: calc(var(--stagger-delay) * 6); }
+.stagger-children > *:nth-child(8) { --reveal-delay: calc(var(--stagger-delay) * 7); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .img-zoom img,
+  .img-zoom > div,
+  .link-underline::after,
+  .text-gradient-animate,
+  .pulse-subtle,
+  .float,
+  .shimmer {
+    animation: none;
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  .img-zoom:hover img,
+  .img-zoom:hover > div {
+    transform: none;
+  }
+}

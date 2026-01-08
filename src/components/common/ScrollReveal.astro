@@ -1,0 +1,207 @@
+---
+/**
+ * ScrollReveal - A lightweight, performant scroll-triggered animation component
+ * Uses CSS transforms with GPU acceleration and Intersection Observer API
+ * Respects prefers-reduced-motion for accessibility
+ */
+
+interface Props {
+  animation?: 'fade-up' | 'fade-in' | 'fade-down' | 'slide-left' | 'slide-right' | 'scale' | 'blur';
+  delay?: number;
+  duration?: number;
+  threshold?: number;
+  class?: string;
+  once?: boolean;
+  stagger?: number;
+}
+
+const {
+  animation = 'fade-up',
+  delay = 0,
+  duration = 700,
+  threshold = 0.15,
+  class: className = '',
+  once = true,
+  stagger = 0,
+} = Astro.props;
+---
+
+<div
+  class:list={['scroll-reveal', `reveal-${animation}`, className]}
+  data-animation={animation}
+  data-threshold={threshold}
+  data-once={once}
+  style={`
+    --reveal-delay: ${delay}ms;
+    --reveal-duration: ${duration}ms;
+    --reveal-stagger: ${stagger}ms;
+  `}
+>
+  <slot />
+</div>
+
+<style is:global>
+  /* Base state - hidden before reveal */
+  .scroll-reveal {
+    opacity: 0;
+    will-change: opacity, transform;
+    transition:
+      opacity var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1),
+      transform var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1),
+      filter var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--reveal-stagger, 0ms));
+  }
+
+  /* Revealed state */
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+    filter: blur(0);
+  }
+
+  /* Animation variants - initial states */
+  .reveal-fade-up {
+    transform: translateY(40px);
+  }
+
+  .reveal-fade-down {
+    transform: translateY(-40px);
+  }
+
+  .reveal-fade-in {
+    transform: translateY(0);
+  }
+
+  .reveal-slide-left {
+    transform: translateX(60px);
+  }
+
+  .reveal-slide-right {
+    transform: translateX(-60px);
+  }
+
+  .reveal-scale {
+    transform: scale(0.92);
+  }
+
+  .reveal-blur {
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+
+  /* Accessibility - respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none !important;
+      filter: none !important;
+      transition: none;
+      will-change: auto;
+    }
+
+    .scroll-reveal.revealed {
+      transform: none;
+      filter: none;
+    }
+  }
+</style>
+
+<script>
+  // Initialize ScrollReveal system globally (runs once)
+  if (!window.__scrollRevealSystem) {
+    window.__scrollRevealSystem = {
+      initialized: false,
+      observer: null,
+      checkVisibleElements: () => {
+        const elements = document.querySelectorAll('.scroll-reveal:not(.revealed)');
+        elements.forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          const isInViewport = rect.top < window.innerHeight + 100 && rect.bottom > -100;
+          if (isInViewport) {
+            el.classList.add('revealed');
+          }
+        });
+      }
+    };
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+      // Create Intersection Observer
+      const observerOptions = {
+        root: null,
+        rootMargin: '100px 0px 100px 0px',
+      };
+
+      window.__scrollRevealSystem.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const element = entry.target;
+          const once = element.dataset.once !== 'false';
+
+          if (entry.isIntersecting) {
+            element.classList.add('revealed');
+
+            if (once) {
+              window.__scrollRevealSystem.observer.unobserve(element);
+              const duration = parseInt(getComputedStyle(element).getPropertyValue('--reveal-duration') || '700');
+              const delay = parseInt(getComputedStyle(element).getPropertyValue('--reveal-delay') || '0');
+              setTimeout(() => { element.style.willChange = 'auto'; }, duration + delay + 100);
+            }
+          } else if (!once && !entry.isIntersecting) {
+            element.classList.remove('revealed');
+          }
+        });
+      }, observerOptions);
+
+      // Set up event listeners once
+      let scrollTimeout;
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(window.__scrollRevealSystem.checkVisibleElements, 100);
+      }, { passive: true });
+
+      window.addEventListener('load', window.__scrollRevealSystem.checkVisibleElements);
+    }
+
+    window.__scrollRevealSystem.initialized = true;
+  }
+
+  // Handle this component's scroll-reveal elements
+  (function() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Find this component's scroll-reveal element
+    const initElements = () => {
+      const elements = document.querySelectorAll('.scroll-reveal');
+      elements.forEach((el, index) => {
+        if (prefersReducedMotion) {
+          el.classList.add('revealed');
+        } else if (window.__scrollRevealSystem.observer && !el.dataset.observed) {
+          // Mark as observed to prevent duplicate observations
+          el.dataset.observed = 'true';
+          
+          // Add stagger delay
+          const stagger = parseInt(getComputedStyle(el).getPropertyValue('--reveal-stagger') || '0');
+          if (stagger > 0) {
+            el.style.setProperty('--reveal-stagger', `${stagger * index}ms`);
+          }
+
+          window.__scrollRevealSystem.observer.observe(el);
+        }
+      });
+
+      // Check visible elements
+      if (window.__scrollRevealSystem.checkVisibleElements) {
+        setTimeout(window.__scrollRevealSystem.checkVisibleElements, 50);
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initElements);
+    } else {
+      initElements();
+    }
+  })();
+
+</script>

@@ -1,10 +1,27 @@
 ---
+import OptimizedImage from '../common/OptimizedImage.astro';
+
 interface Props {
   images: string[];
   title: string;
 }
 
 const { images, title } = Astro.props;
+
+// Generate meaningful alt text for gallery images
+function getAltText(index: number): string {
+  const contexts = [
+    'Stunning mountain vista',
+    'Trekkers on the trail',
+    'Local village scenery',
+    'Mountain sunrise view',
+    'Camp setup with mountain backdrop',
+    'Prayer flags in the wind',
+    'Scenic landscape panorama',
+    'Trail through the mountains',
+  ];
+  return `${title} - ${contexts[index % contexts.length]}`;
+}
 ---
 
 {images && images.length > 0 && (
@@ -26,18 +43,22 @@ const { images, title } = Astro.props;
         {images.map((image, index) => (
           <div
             class:list={[
-              'group relative overflow-hidden rounded-2xl',
+              'group relative overflow-hidden rounded-2xl img-zoom',
               index === 0 ? 'sm:col-span-2 sm:row-span-2' : '',
             ]}
           >
-            <div
+            <OptimizedImage
+              src={image}
+              alt={getAltText(index)}
+              width={index === 0 ? 1200 : 600}
+              height={index === 0 ? 800 : 600}
               class:list={[
-                'aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-110',
-                index === 0 ? 'sm:aspect-auto sm:h-full' : '',
+                'w-full object-cover img-zoom-target',
+                index === 0 ? 'h-full' : 'aspect-square',
               ]}
-              style={`background-image: url('${image}')`}
-            >
-            </div>
+              loading={index < 2 ? 'eager' : 'lazy'}
+              aspectRatio={index === 0 ? '3/2' : '1/1'}
+            />
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             </div>
           </div>

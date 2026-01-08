@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from './OptimizedImage.astro';
+
 interface Props {
   title: string;
   slug: string;
@@ -34,14 +36,18 @@ const categoryColors = {
 };
 ---
 
-<article class="group relative overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover">
+<article class="group relative overflow-hidden rounded-2xl bg-white shadow-card hover-lift">
   <!-- Image Container -->
-  <div class="relative h-64 overflow-hidden">
-    <div
-      class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-      style={`background-image: url('${heroImage}')`}
-    >
-    </div>
+  <div class="relative h-64 overflow-hidden img-zoom">
+    <OptimizedImage
+      src={heroImage}
+      alt={`${title} - ${categoryLabels[category]} adventure in Nepal`}
+      width={600}
+      height={400}
+      class="absolute inset-0 h-full w-full object-cover img-zoom-target"
+      loading="lazy"
+      aspectRatio="3/2"
+    />
     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
     </div>
 

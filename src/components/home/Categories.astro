@@ -1,4 +1,7 @@
 ---
+import ScrollReveal from '../common/ScrollReveal.astro';
+import OptimizedImage from '../common/OptimizedImage.astro';
+
 const categories = [
   {
     title: 'Trekking',
@@ -30,37 +33,44 @@ const categories = [
 <section id="categories" class="bg-gray-50 py-20 lg:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
-    <div class="mx-auto max-w-2xl text-center">
-      <span
-        class="text-sm font-semibold uppercase tracking-widest text-accent"
-      >
-        Choose Your Adventure
-      </span>
-      <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-        Explore Our Adventures
-      </h2>
-      <p class="mt-4 text-lg text-gray-600">
-        From gentle treks to technical climbs, we offer experiences for every
-        level of adventurer.
-      </p>
-    </div>
+    <ScrollReveal animation="fade-up">
+      <div class="mx-auto max-w-2xl text-center">
+        <span
+          class="text-sm font-semibold uppercase tracking-widest text-accent"
+        >
+          Choose Your Adventure
+        </span>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Explore Our Adventures
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          From gentle treks to technical climbs, we offer experiences for every
+          level of adventurer.
+        </p>
+      </div>
+    </ScrollReveal>
 
     <!-- Category Cards -->
     <div class="mt-16 grid gap-8 md:grid-cols-3">
       {
-        categories.map((category) => (
-          <a
-            href={category.href}
-            class="group relative overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover"
-          >
-            {/* Image */}
-            <div class="relative h-48 overflow-hidden">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style={`background-image: url('${category.image}')`}
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            </div>
+        categories.map((category, index) => (
+          <ScrollReveal animation="fade-up" delay={index * 100}>
+            <a
+              href={category.href}
+              class="group relative block overflow-hidden rounded-2xl bg-white shadow-card hover-lift"
+            >
+              {/* Image */}
+              <div class="relative h-48 overflow-hidden img-zoom">
+                <OptimizedImage
+                  src={category.image}
+                  alt={`${category.title} adventures in the Himalayas`}
+                  width={600}
+                  height={400}
+                  class="absolute inset-0 h-full w-full object-cover img-zoom-target"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </div>
 
             {/* Content */}
             <div class="p-6">
@@ -103,6 +113,7 @@ const categories = [
               </div>
             </div>
           </a>
+          </ScrollReveal>
         ))
       }
     </div>

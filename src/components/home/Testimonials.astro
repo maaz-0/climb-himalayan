@@ -1,5 +1,6 @@
 ---
 import { getEntry } from 'astro:content';
+import ScrollReveal from '../common/ScrollReveal.astro';
 
 const testimonialsData = await getEntry('testimonials', 'testimonials');
 const testimonials = testimonialsData?.data.testimonials || [];
@@ -8,20 +9,22 @@ const testimonials = testimonialsData?.data.testimonials || [];
 <section class="bg-white py-20 lg:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
-    <div class="mx-auto max-w-2xl text-center">
-      <span
-        class="text-sm font-semibold uppercase tracking-widest text-accent"
-      >
-        Testimonials
-      </span>
-      <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-        What Our Adventurers Say
-      </h2>
-      <p class="mt-4 text-lg text-gray-600">
-        Don't just take our word for it - hear from travelers who've experienced
-        the Himalayas with us.
-      </p>
-    </div>
+    <ScrollReveal animation="fade-up">
+      <div class="mx-auto max-w-2xl text-center">
+        <span
+          class="text-sm font-semibold uppercase tracking-widest text-accent"
+        >
+          Testimonials
+        </span>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          What Our Adventurers Say
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          Don't just take our word for it - hear from travelers who've experienced
+          the Himalayas with us.
+        </p>
+      </div>
+    </ScrollReveal>
 
     <!-- Testimonials Carousel -->
     <div class="relative mt-16">
@@ -131,14 +134,14 @@ const testimonials = testimonialsData?.data.testimonials || [];
       </button>
 
       <!-- Dots Navigation -->
-      <div class="mt-8 flex justify-center gap-2">
+      <div class="mt-8 flex justify-center gap-3">
         {
           testimonials.map((_, index) => (
             <button
               type="button"
               class:list={[
-                'testimonial-dot h-2 w-2 rounded-full transition-all duration-300',
-                index === 0 ? 'bg-accent w-6' : 'bg-gray-300',
+                'testimonial-dot h-4 w-4 rounded-full transition-all duration-300 focus-ring',
+                index === 0 ? 'bg-accent w-8' : 'bg-gray-300 hover:bg-gray-400',
               ]}
               data-index={index}
               aria-label={`Go to testimonial ${index + 1}`}
@@ -182,10 +185,10 @@ const testimonials = testimonialsData?.data.testimonials || [];
     // Update dots
     dots.forEach((dot, i) => {
       if (i === currentIndex) {
-        dot.classList.add('bg-accent', 'w-6');
+        dot.classList.add('bg-accent', 'w-8');
         dot.classList.remove('bg-gray-300');
       } else {
-        dot.classList.remove('bg-accent', 'w-6');
+        dot.classList.remove('bg-accent', 'w-8');
         dot.classList.add('bg-gray-300');
       }
     });

@@ -1,0 +1,88 @@
+---
+interface Props {
+  type: 'organization' | 'localBusiness' | 'product' | 'breadcrumb' | 'faq';
+  data?: Record<string, unknown>;
+}
+
+const { type, data } = Astro.props;
+
+const siteUrl = 'https://climbhimalayan.com';
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Climb Himalayan",
+  "url": siteUrl,
+  "logo": `${siteUrl}/logo.png`,
+  "description": "Expert-guided trekking, expeditions, and technical climbing packages in Nepal. Your gateway to the roof of the world since 2005.",
+  "foundingDate": "2005",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Thamel",
+    "addressLocality": "Kathmandu",
+    "addressCountry": "NP"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "info@climbhimalayan.com",
+    "contactType": "customer service",
+    "availableLanguage": ["English", "Nepali"]
+  },
+  "sameAs": [
+    "https://facebook.com/climbhimalayan",
+    "https://instagram.com/climbhimalayan",
+    "https://youtube.com/climbhimalayan"
+  ],
+  "areaServed": [
+    { "@type": "Country", "name": "United States" },
+    { "@type": "Country", "name": "Canada" }
+  ]
+};
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  "name": "Climb Himalayan",
+  "image": `${siteUrl}/og-image.jpg`,
+  "url": siteUrl,
+  "@id": `${siteUrl}/#organization`,
+  "telephone": "+977-1-4123456",
+  "email": "info@climbhimalayan.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Thamel",
+    "addressLocality": "Kathmandu",
+    "postalCode": "44600",
+    "addressCountry": "NP"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 27.7172,
+    "longitude": 85.3240
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "09:00",
+    "closes": "18:00"
+  },
+  "priceRange": "$$-$$$"
+};
+
+function getSchema() {
+  switch(type) {
+    case 'organization': return organizationSchema;
+    case 'localBusiness': return localBusinessSchema;
+    case 'product': return data;
+    case 'breadcrumb': return data;
+    case 'faq': return data;
+    default: return null;
+  }
+}
+
+const schema = getSchema();
+---
+
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema, null, 0)} />
+)}

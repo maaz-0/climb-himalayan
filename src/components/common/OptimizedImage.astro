@@ -1,0 +1,93 @@
+---
+/**
+ * OptimizedImage - A performance-optimized image component
+ * - Optimizes Unsplash URLs with width, quality, and format params
+ * - Implements native lazy loading
+ * - Uses async decoding for better performance
+ * - Preserves aspect ratio to prevent layout shift
+ */
+
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+  aspectRatio?: string;
+  quality?: number;
+  sizes?: string;
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  width = 800,
+  height,
+  loading = 'lazy',
+  class: className = '',
+  aspectRatio,
+  quality = 75,
+  sizes,
+  fetchpriority,
+} = Astro.props;
+
+/**
+ * Optimize Unsplash URLs with proper parameters
+ * Converts to WebP format for better compression
+ */
+function optimizeImageUrl(url: string, w: number, q: number): string {
+  if (!url) return '';
+
+  // Handle Unsplash URLs
+  if (url.includes('unsplash.com')) {
+    const baseUrl = url.split('?')[0];
+    return `${baseUrl}?w=${w}&q=${q}&fm=webp&fit=crop&auto=format`;
+  }
+
+  // Handle other CDN URLs that support parameters
+  if (url.includes('cloudinary.com') || url.includes('imgix.net')) {
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}w=${w}&q=${q}&f=auto`;
+  }
+
+  // Return original URL for local images or unsupported CDNs
+  return url;
+}
+
+const optimizedSrc = optimizeImageUrl(src, width, quality);
+
+// Generate srcset for responsive images (Unsplash only)
+const srcsetWidths = [400, 600, 800, 1200, 1600];
+const srcset = src.includes('unsplash.com')
+  ? srcsetWidths
+      .filter((w) => w <= width * 2) // Don't generate sizes larger than 2x requested
+      .map((w) => `${optimizeImageUrl(src, w, quality)} ${w}w`)
+      .join(', ')
+  : undefined;
+
+// Default sizes if not provided
+const defaultSizes = sizes || '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+
+// Calculate aspect ratio style
+const aspectStyle = aspectRatio
+  ? `aspect-ratio: ${aspectRatio};`
+  : height && width
+    ? `aspect-ratio: ${width}/${height};`
+    : '';
+---
+
+<img
+  src={optimizedSrc}
+  alt={alt}
+  width={width}
+  height={height}
+  loading={loading}
+  decoding="async"
+  class={className}
+  style={aspectStyle}
+  srcset={srcset}
+  sizes={srcset ? defaultSizes : undefined}
+  fetchpriority={fetchpriority}
+/>

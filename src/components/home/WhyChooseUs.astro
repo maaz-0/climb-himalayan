@@ -1,4 +1,6 @@
 ---
+import ScrollReveal from '../common/ScrollReveal.astro';
+
 const features = [
   {
     title: 'Local Expertise',
@@ -42,26 +44,29 @@ const features = [
 <section class="bg-white py-20 lg:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
-    <div class="mx-auto max-w-2xl text-center">
-      <span
-        class="text-sm font-semibold uppercase tracking-widest text-accent"
-      >
-        Why Choose Us
-      </span>
-      <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-        Your Adventure, Our Expertise
-      </h2>
-      <p class="mt-4 text-lg text-gray-600">
-        For over two decades, we've been helping adventurers achieve their
-        Himalayan dreams safely and sustainably.
-      </p>
-    </div>
+    <ScrollReveal animation="fade-up">
+      <div class="mx-auto max-w-2xl text-center">
+        <span
+          class="text-sm font-semibold uppercase tracking-widest text-accent"
+        >
+          Why Choose Us
+        </span>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Your Adventure, Our Expertise
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          For over two decades, we've been helping adventurers achieve their
+          Himalayan dreams safely and sustainably.
+        </p>
+      </div>
+    </ScrollReveal>
 
     <!-- Features Grid -->
     <div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {
-        features.map((feature) => (
-          <div class="group rounded-2xl bg-gray-50 p-8 transition-all duration-300 hover:bg-primary hover:shadow-lg">
+        features.map((feature, index) => (
+          <ScrollReveal animation="fade-up" delay={index * 75}>
+            <div class="group rounded-2xl bg-gray-50 p-8 transition-all duration-300 hover:bg-primary hover:shadow-lg h-full">
             <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10 transition-colors group-hover:bg-white/20">
               <svg
                 class="h-7 w-7 text-accent transition-colors group-hover:text-white"
@@ -84,6 +89,7 @@ const features = [
               {feature.description}
             </p>
           </div>
+          </ScrollReveal>
         ))
       }
     </div>

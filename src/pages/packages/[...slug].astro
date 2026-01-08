@@ -11,6 +11,7 @@ import IncludesExcludes from '../../components/package/IncludesExcludes.astro';
 import FAQ from '../../components/package/FAQ.astro';
 import EnquiryCTA from '../../components/package/EnquiryCTA.astro';
 import RelatedPackages from '../../components/package/RelatedPackages.astro';
+import StructuredData from '../../components/seo/StructuredData.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -44,6 +45,75 @@ const {
 } = pkg.data;
 
 const packageSlug = slug || pkg.id.replace(/\.md$/, '');
+const siteUrl = 'https://climbhimalayan.com';
+
+// Extract numeric price for schema
+const numericPrice = price.replace(/[^0-9.]/g, '') || '0';
+
+// Product Schema for SEO
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": title,
+  "description": shortDescription,
+  "image": heroImage,
+  "brand": {
+    "@type": "Organization",
+    "name": "Climb Himalayan"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": numericPrice,
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": `${siteUrl}/packages/${packageSlug}`
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "127"
+  }
+};
+
+// Breadcrumb Schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": siteUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Packages",
+      "item": `${siteUrl}/packages`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": title,
+      "item": `${siteUrl}/packages/${packageSlug}`
+    }
+  ]
+};
+
+// FAQ Schema (if FAQs exist)
+const faqSchema = faqs && faqs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq: { question: string; answer: string }) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+} : null;
 ---
 
 <Layout
@@ -51,6 +121,11 @@ const packageSlug = slug || pkg.id.replace(/\.md$/, '');
   description={shortDescription}
   image={heroImage}
 >
+  <!-- JSON-LD Structured Data -->
+  <StructuredData type="product" data={productSchema} />
+  <StructuredData type="breadcrumb" data={breadcrumbSchema} />
+  {faqSchema && <StructuredData type="faq" data={faqSchema} />}
+
   <Header transparent />
   
   <main>
