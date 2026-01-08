@@ -143,21 +143,9 @@ const faqSchema = faqs && faqs.length > 0 ? {
       price={price}
     />
 
-    <Overview
-      content={`<div class="package-content">${await Astro.slots.render('default').catch(() => '')}</div>`}
-      highlights={highlights}
-    />
-
-    <!-- Render markdown content separately -->
-    <section class="bg-white py-0 -mt-20">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="lg:pl-0 lg:pr-[calc(100%/3+3rem)]">
-          <div class="prose prose-lg max-w-none text-gray-600">
-            <Content />
-          </div>
-        </div>
-      </div>
-    </section>
+    <Overview highlights={highlights}>
+      <Content />
+    </Overview>
 
     {galleryImages && galleryImages.length > 0 && (
       <Gallery images={galleryImages} title={title} />

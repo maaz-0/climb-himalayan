@@ -1,13 +1,12 @@
 ---
 interface Props {
-  content: string;
   highlights: string[];
 }
 
-const { content, highlights } = Astro.props;
+const { highlights } = Astro.props;
 ---
 
-<section class="bg-white py-20 lg:py-28">
+<section class="bg-white pt-20 pb-4 lg:pt-28 lg:pb-6">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="grid gap-12 lg:grid-cols-3">
       <!-- Main Content -->
@@ -19,7 +18,7 @@ const { content, highlights } = Astro.props;
           Overview
         </h2>
         <div class="prose prose-lg mt-6 max-w-none text-gray-600">
-          <Fragment set:html={content} />
+          <slot />
         </div>
       </div>
 
