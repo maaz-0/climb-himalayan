@@ -70,12 +70,12 @@ export async function onRequest(context) {
   const { request, env, next } = context;
   const url = new URL(request.url);
   
-  // Allow access to login page and auth endpoint
+  // CRITICAL: Allow access to login page and auth endpoints FIRST
   if (url.pathname === '/auth-login.html' || url.pathname.startsWith('/auth/')) {
     return next();
   }
   
-  // Allow access to static assets
+  // Allow access to static assets (including those from public folder)
   if (url.pathname.startsWith('/_astro/') || 
       url.pathname.endsWith('.css') || 
       url.pathname.endsWith('.js') ||
@@ -83,15 +83,28 @@ export async function onRequest(context) {
       url.pathname.endsWith('.png') ||
       url.pathname.endsWith('.jpg') ||
       url.pathname.endsWith('.jpeg') ||
-      url.pathname.endsWith('.webp')) {
+      url.pathname.endsWith('.webp') ||
+      url.pathname.endsWith('.ico') ||
+      url.pathname === '/robots.txt' ||
+      url.pathname === '/favicon.svg' ||
+      url.pathname.startsWith('/sitemap')) {
     return next();
+  }
+  
+  // Check if SITE_PASSWORD is configured
+  const sitePassword = env.SITE_PASSWORD;
+  if (!sitePassword) {
+    // Password not configured - show error page instead of redirecting
+    return new Response('Site password not configured. Please set SITE_PASSWORD environment variable in Cloudflare Pages settings.', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' }
+    });
   }
   
   // Check for valid session
   const sessionToken = getCookie(request, SESSION_COOKIE_NAME);
-  const sitePassword = env.SITE_PASSWORD;
   
-  if (sessionToken && sitePassword) {
+  if (sessionToken) {
     const isValid = await verifySessionToken(sessionToken, sitePassword);
     if (isValid) {
       // Valid session, allow access
