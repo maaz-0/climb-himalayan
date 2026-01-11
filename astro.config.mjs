@@ -6,7 +6,6 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://climbhimalayan.com',
-  output: 'static',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()]
