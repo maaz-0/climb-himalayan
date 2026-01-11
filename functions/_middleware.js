@@ -71,7 +71,9 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   
   // CRITICAL: Allow access to login page and auth endpoints FIRST
-  if (url.pathname === '/auth-login.html' || url.pathname.startsWith('/auth/')) {
+  if (url.pathname === '/auth-login.html' || 
+      url.pathname === '/auth-login' ||
+      url.pathname.startsWith('/auth/')) {
     return next();
   }
   
@@ -112,6 +114,6 @@ export async function onRequest(context) {
     }
   }
   
-  // No valid session, redirect to login
-  return Response.redirect(new URL('/auth-login.html', request.url).toString(), 302);
+  // No valid session, redirect to login (without .html for clean URLs)
+  return Response.redirect(new URL('/auth-login', request.url).toString(), 302);
 }
